@@ -55,6 +55,7 @@ public class SOProcess {
 					// get the snippet
 					String body = result.getString("Body");
 					ArrayList<String> snippets = getCode(body);
+					int method_count = -1;
 					for(String snippet: snippets) {
 						snippet = StringEscapeUtils.unescapeHtml4(snippet);
 						int len = snippet.split(System.lineSeparator()).length;
@@ -63,19 +64,20 @@ public class SOProcess {
 							try {
 								ArrayList<String> methods = parser.extracMethod(snippet);
 								// print methods to the output file
-								for(int i = 0; i < methods.size(); i++) {
-									String method = methods.get(i);
+								for(String method : methods) {
+									method_count ++;
 									int len2 = method.split(System.lineSeparator()).length; 
 									if(len2 >= 10 || len2 < 4) {
+//									if(len2 < 10) {
 										// only consider methods with less than 10 lines of code
 										continue;
 									}
-									String s = "===" + System.lineSeparator();
+									String s = "===UCLA@@@UCI===" + System.lineSeparator();
 									s += "PostId: " + id + System.lineSeparator();
 									s += "Score: " + score + System.lineSeparator();
 									s += "Accepted: " + isAccepted + System.lineSeparator();
 									s += "ViewCount: " + viewCount + System.lineSeparator();
-									s += "MethodId: " + i + System.lineSeparator();
+									s += "MethodId: " + method_count + System.lineSeparator();
 									s += method + System.lineSeparator();
 									FileUtils.appendStringToFile(s, output);
 								}
@@ -126,6 +128,7 @@ public class SOProcess {
 	public static void main(String[] args) {
 		SOProcess p = new SOProcess();
 		p.connect();
+//		p.processAll("./so-more-than-10-lines.txt");
 		p.processAll("./so-less-than-10-lines.txt");
 		p.close();
 	}
