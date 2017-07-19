@@ -126,15 +126,15 @@ def process_so_file(FILE_tokens_file, FILE_stats_file):
 
     with open("so-more-than-10-lines.txt", "r") as f:
         all_snippets = f.read()
-        blocks = all_snippets.split("\n===\n")
+        blocks = all_snippets.split("===UCLA@@@UCI===")
         for item in blocks:
+            item = item.strip()
             if len(item)==0:
                 continue
             else:
                 try:
                     global block_count
                     block_count += 1
-                    item = item.strip()
                     lines = item.split("\n")
                     post_id = (lines[0].split())[1]
                     method_id = (lines[4].split())[1]
