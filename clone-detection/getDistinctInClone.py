@@ -1,6 +1,6 @@
 import sys, os
 
-# sys.argv[1] may be either clone-output.txt or clone-pair-200.txt
+# sys.argv[1] may be either clone-output.txt
 
 bad_pair = 0
 gh_blocks = set()

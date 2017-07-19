@@ -6,7 +6,7 @@ def isGH(id):
 	else:
 		return False
 
-so_output_dict() = {}
+so_output_dict = {}
 def get_output_dict():
 	
 	global so_output_dict
@@ -66,17 +66,21 @@ for block_id in so_output_dict:
 	else:
 		post_id_list[post_id] = 1
 
+print len(loc_all)
+print len(loc_has_clone)
+print len(post_id_list)
+
 with open("loc-all.csv", 'w') as fw:
 	for item in loc_all:
 		fw.write(item + "\n")
 
-with open("lock-has-clone.csv", 'w') as fw:
+with open("loc-has-clone.csv", 'w') as fw:
 	for item in loc_has_clone:
 		fw.write(item + "\n")
 
 with open("post-id-list.txt", 'w') as fw:
 	for postid in post_id_list:
-		fw.write(postid + ',' + post_id_list[post_id] + '\n')
+		fw.write(str(postid) + ',' + str(post_id_list[postid]) + '\n')
 
 
 

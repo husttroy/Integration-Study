@@ -98,15 +98,16 @@ def write_files():
 	snippet_dict = {}
 	with open("so-more-than-10-lines.txt", "r") as f:	
 		all_snippets = f.read()
-		blocks = all_snippets.split("\n===\n")
+		blocks = all_snippets.split("===UCLA@@@UCI===")
 		for item in blocks:
+			item = item.strip()
 			if len(item)==0:
 				continue
 			else:
-				item = item.strip()
 				lines = item.split("\n")
 				if len(lines) < 6:
-					print "cannot find a valid snippet", item 
+					print "cannot find a valid snippet", item
+					continue 
 				post_id = (lines[0].split())[1]
 				method_id = (lines[4].split())[1]
 				snippet = "\n".join(lines[5:])
@@ -120,18 +121,18 @@ def write_files():
 		with open(newdir + "/so.txt", 'w') as fw:
 			fw.write(snippet_dict[(so_post_id, so_method_id)])
 		
-		for (start_line, end_line, file_path) in block_location[(so_post_id, so_method_id)]:
+		for i, (start_line, end_line, file_path) in enumerate(block_location[(so_post_id, so_method_id)]):
 			file_path = file_path.strip('"')
 			zip_path = '/'.join(file_path.split("/")[0:10])
 			subfile_path = '/'.join(file_path.split("/")[10:])
 			archive = zipfile.ZipFile(zip_path, 'r')
 			code = archive.read(subfile_path)
-			with open(newdir + "/gh-" + start_line + "-" + end_line + ".txt", 'w') as fw:
+			with open(newdir + "/gh-" + str(i) + "-" + start_line + "-" + end_line + ".txt", 'w') as fw:
 				fw.write(code)
 
 
 def main():
-	try:
+#	try:
 		get_output_dict()
 		print len(output_dict)
 		load_SO_stats()
@@ -141,6 +142,6 @@ def main():
 		getBlockLocation()
 		print len(block_location)
 		write_files()
-	except  Exception as e:
-		print e
+#	except  Exception as e:
+#		print e
 main()
