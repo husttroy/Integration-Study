@@ -74,6 +74,24 @@ def load_GH_stats():
 			gh_file_stats[file_id] = file_path
 
 
+gh_num_dup = {}
+so_num_dup = {}
+def load_num_duplicates():
+        global gh_num_dup
+        global so_num_dup
+        with open("numTokenDuplicates.txt", 'r') as f:
+                for line in f:
+                        line = line.strip()
+                        block_id = line.split(',')[0]
+                        num_dup = line.split(',')[1]
+                        if len(block_id) > 6:
+                                # this is a GH block:
+                                gh_num_dup[block_id] = num_dup
+                        else:
+                                # this is a SO block
+                                so_num_dup[block_id] = num_dup
+
+
 block_location = {}
 def getBlockLocation():
 	global block_location
@@ -82,16 +100,21 @@ def getBlockLocation():
 	for (so_proj_id, so_block_id) in output_dict:
 		so_post_id = so_proj_id[1:]
 		so_method_id = so_block_stats[so_block_id]
+		
+		so_dup = so_num_dup[so_block_id]		
 
 		clone_list = output_dict[(so_proj_id, so_block_id)]
 		for tuple in clone_list:
 			(gh_proj_id, gh_block_id) = tuple
 			(start_line, end_line) = gh_block_stats[gh_block_id] 
 			file_path = gh_file_stats[gh_block_id[5:]]
-			if (so_post_id, so_method_id) in block_location:
-				block_location[(so_post_id, so_method_id)].append((start_line, end_line, file_path))	
+			
+			gh_dup = gh_num_dup[gh_block_id]
+
+			if (so_post_id, so_method_id, so_dup) in block_location:
+				block_location[(so_post_id, so_method_id, so_dup)].append((start_line, end_line, file_path, gh_dup))	
 			else:
-				block_location[(so_post_id, so_method_id)] = [(start_line, end_line, file_path)]
+				block_location[(so_post_id, so_method_id, so_dup)] = [(start_line, end_line, file_path, gh_dup)]
 
 
 def write_files():
@@ -114,20 +137,20 @@ def write_files():
 				snippet_dict[(post_id, method_id)] = snippet
 
 
-	for (so_post_id, so_method_id) in block_location:
+	for (so_post_id, so_method_id, so_dup) in block_location:
 		newdir = "clone-codes/so-"+ so_post_id + "-" + so_method_id
 		if not os.path.exists(newdir):
 			os.makedirs(newdir)
-		with open(newdir + "/so.txt", 'w') as fw:
+		with open(newdir + "/so-" + so_dup + ".txt", 'w') as fw:
 			fw.write(snippet_dict[(so_post_id, so_method_id)])
 		
-		for i, (start_line, end_line, file_path) in enumerate(block_location[(so_post_id, so_method_id)]):
+		for i, (start_line, end_line, file_path, gh_dup) in enumerate(block_location[(so_post_id, so_method_id, so_dup)]):
 			file_path = file_path.strip('"')
 			zip_path = '/'.join(file_path.split("/")[0:10])
 			subfile_path = '/'.join(file_path.split("/")[10:])
 			archive = zipfile.ZipFile(zip_path, 'r')
 			code = archive.read(subfile_path)
-			with open(newdir + "/gh-" + str(i) + "-" + start_line + "-" + end_line + ".txt", 'w') as fw:
+			with open(newdir + "/gh-" + str(i) + "-" + gh_dup + "-" + start_line + "-" + end_line + ".txt", 'w') as fw:
 				fw.write(code)
 
 
@@ -139,6 +162,8 @@ def main():
 		print len(so_block_stats)
 		load_GH_stats()
 		print len(gh_block_stats), len(gh_file_stats)
+		load_num_duplicates()
+		print len(gh_num_dup), len(so_num_dup)
 		getBlockLocation()
 		print len(block_location)
 		write_files()
