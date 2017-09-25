@@ -37,4 +37,20 @@ with open(file, 'r') as f:
 print bad_pair
 print len(gh_blocks)
 print len(so_blocks)
-		
+
+# get all GH blocks that have clones in SO
+num_dup = {}
+with open("numTokenDuplicates.txt", 'r') as f:
+	for line in f:
+		line = line.strip()
+		items = line.split(',')
+		block_id = items[0]
+		dup = items[1]
+		num_dup[block_id] = dup
+
+all_gh_count = 0
+for block in gh_blocks:
+	dup = num_dup[block]
+	all_gh_count += int(dup)
+print "all GH blocks that have clones in SO: ", all_gh_count
+			

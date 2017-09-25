@@ -11,10 +11,10 @@ import datetime as dt
 separators = [';', '.', '[', ']', '(', ')', '~', '!', '-', '+', 
 	'&', '*', '/', '%', '<', '>', '^', '|', '?', '{', 
 	'}', '=', '#', ',','"', '\\', ':', '$', "'", '`', '@']
-comment_inline = "#"
+comment_inline = "//"
 comment_inline_pattern = comment_inline + '.*?$'
-comment_open_tag = "'''"
-comment_close_tag = "'''"
+comment_open_tag = "/\\*"
+comment_close_tag = "\\*/"
 comment_open_close_pattern = comment_open_tag + '.*?' + comment_close_tag
 proj_id_flag = "2"
 
