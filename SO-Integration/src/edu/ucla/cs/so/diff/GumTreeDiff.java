@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.gumtreediff.actions.ActionGenerator;
-import com.github.gumtreediff.actions.RootAndLeavesClassifier;
 import com.github.gumtreediff.actions.model.Action;
 import com.github.gumtreediff.actions.model.Delete;
 import com.github.gumtreediff.actions.model.Insert;
@@ -23,6 +22,9 @@ import com.github.gumtreediff.tree.TreeContext;
 public class GumTreeDiff {
 	private String src;
 	private String dst;
+	
+	public ITree srcTree;
+	public ITree dstTree;
 	
 	private Set<ITree> srcUpdTrees;
 //    protected Set<ITree> dstUpdTrees;
@@ -49,8 +51,8 @@ public class GumTreeDiff {
 		Run.initGenerators();
 		srcContext = Generators.getInstance().getTree(src);
 		dstContext = Generators.getInstance().getTree(dst);
-		ITree srcTree = srcContext.getRoot();
-		ITree dstTree = dstContext.getRoot();
+		srcTree = srcContext.getRoot();
+		dstTree = dstContext.getRoot();
 		Matcher m = Matchers.getInstance().getMatcher(srcTree, dstTree); // retrieve the default matcher
 		m.match();
 		ActionGenerator g = new ActionGenerator(srcTree, dstTree, m.getMappings());
@@ -183,8 +185,8 @@ public class GumTreeDiff {
 	}
 	
 	public static void main(String[] args) throws UnsupportedOperationException, IOException {	
-		String file1 = "/home/troy/research/Integration-Study/sample/so-1/so-10525288-3.java";
-		String file2 = "/home/troy/research/Integration-Study/sample/so-1/carved-gh-235-272.java";
+		String file1 = "/home/troy/research/Integration-Study/dataset/sample/so-33/so-16090931-0-1.java";
+		String file2 = "/home/troy/research/Integration-Study/dataset/sample/so-33/carved-gh-0-1-46-57.java";
 		GumTreeDiff diff = new GumTreeDiff(file1, file2);
 		List<Action> actions = diff.diff();
 		System.out.println(actions.size());
