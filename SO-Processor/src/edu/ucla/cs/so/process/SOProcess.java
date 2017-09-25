@@ -51,6 +51,7 @@ public class SOProcess {
 					String score = result.getString("Score");
 					String isAccepted = result.getString("IsAccepted");
 					String viewCount = result.getString("ViewCount");
+					String tags = result.getString("tags");
 					
 					// get the snippet
 					String body = result.getString("Body");
@@ -67,9 +68,10 @@ public class SOProcess {
 								for(String method : methods) {
 									method_count ++;
 									int len2 = method.split(System.lineSeparator()).length; 
-									if(len2 >= 10 || len2 < 4) {
-//									if(len2 < 10) {
+//									if(len2 >= 10 || len2 < 4) {
 										// only consider methods with less than 10 lines of code
+									if(len2 < 10) {
+										// only consider methods with more than 10 lines of code
 										continue;
 									}
 									String s = "===UCLA@@@UCI===" + System.lineSeparator();
@@ -77,6 +79,7 @@ public class SOProcess {
 									s += "Score: " + score + System.lineSeparator();
 									s += "Accepted: " + isAccepted + System.lineSeparator();
 									s += "ViewCount: " + viewCount + System.lineSeparator();
+									s += "Tags: " + tags + System.lineSeparator();
 									s += "MethodId: " + method_count + System.lineSeparator();
 									s += method + System.lineSeparator();
 									FileUtils.appendStringToFile(s, output);
@@ -128,8 +131,8 @@ public class SOProcess {
 	public static void main(String[] args) {
 		SOProcess p = new SOProcess();
 		p.connect();
-//		p.processAll("./so-more-than-10-lines.txt");
-		p.processAll("./so-less-than-10-lines.txt");
+		p.processAll("./so-more-than-10-lines.txt");
+//		p.processAll("./so-less-than-10-lines.txt");
 		p.close();
 	}
 }
