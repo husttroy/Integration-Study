@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import edu.ucla.cs.utils.FileUtils;
+import edu.ucla.cs.utils.MyFileUtils;
 
 public class FilterSizeEditPair {
 	public static void main(String[] args) throws IOException {
@@ -15,7 +15,7 @@ public class FilterSizeEditPair {
 			int size = Integer.parseInt(s.split(",")[0]);
 			int edit = Integer.parseInt(s.split(",")[1]);
 			if(size < 400 && edit < 150) {
-				FileUtils.appendStringToFile(size + "," + edit + System.lineSeparator(), output);
+				MyFileUtils.appendStringToFile(size + "," + edit + System.lineSeparator(), output);
 			}
 		}
 	}

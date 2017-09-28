@@ -2,7 +2,7 @@ package edu.ucla.cs.so.stats;
 
 import java.io.File;
 
-import edu.ucla.cs.utils.FileUtils;
+import edu.ucla.cs.utils.MyFileUtils;
 
 public class GeneratePostLinkCSV {
 	
@@ -28,7 +28,7 @@ public class GeneratePostLinkCSV {
 			}
 		}
 		
-		FileUtils.writeStringToFile(links, output);
+		MyFileUtils.writeStringToFile(links, output);
 	}
 	
 	public static void main(String[] args) {

@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class FileUtils {
+public class MyFileUtils {
 	public static void appendStringToFile(String s, String path) {
 		try {
 			File f = new File(path);

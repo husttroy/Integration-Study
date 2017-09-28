@@ -30,7 +30,7 @@ public class Preprocess {
 						String[] ss = fileName.substring(0, fileName.indexOf(".txt")).split("-");
 						int startLine = Integer.parseInt(ss[3]);
 						int endLine = Integer.parseInt(ss[4]);
-						String code = FileUtils.readFileToString(file.getAbsolutePath());
+						String code = MyFileUtils.readFileToString(file.getAbsolutePath());
 						String[] lines = code.split(System.lineSeparator());
 						StringBuilder sb = new StringBuilder();
 						sb.append("public class foo{" + System.lineSeparator());
@@ -47,7 +47,7 @@ public class Preprocess {
 						if(!carvedFile.exists()) {
 							carvedFile.createNewFile();
 						}
-						FileUtils.writeStringToFile(sb.toString(), carvedFile.getAbsolutePath());
+						MyFileUtils.writeStringToFile(sb.toString(), carvedFile.getAbsolutePath());
 					}
 				}
 				
@@ -60,9 +60,9 @@ public class Preprocess {
 	}
 	
 	public static void addClassHeader(String path) {
-		String s = FileUtils.readFileToString(path);
+		String s = MyFileUtils.readFileToString(path);
 		s = "public class foo {" + System.lineSeparator() + s;
 		s += "}";
-		FileUtils.writeStringToFile(s, path);
+		MyFileUtils.writeStringToFile(s, path);
 	}
 }

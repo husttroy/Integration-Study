@@ -19,7 +19,7 @@ import com.github.gumtreediff.actions.model.Update;
 import com.github.gumtreediff.tree.ITree;
 
 import edu.ucla.cs.so.diff.GumTreeDiff;
-import edu.ucla.cs.utils.FileUtils;
+import edu.ucla.cs.utils.MyFileUtils;
 
 public class ASTEditAnalysis {
 	final String edit_csv_file = "/home/troy/research/Integration-Study/log/edit_dist.csv";
@@ -90,13 +90,13 @@ public class ASTEditAnalysis {
 							
 							// output the number of edits to a csv file
 							for(int i = 0; i < gh_num * so_num; i++) {
-								FileUtils.appendStringToFile(edits.size() + System.lineSeparator(), edit_csv_file);
+								MyFileUtils.appendStringToFile(edits.size() + System.lineSeparator(), edit_csv_file);
 							}
 							
 							// output the size of the SO snippit and the number of edits to a csv file
 							int size = CountASTSize.countNumOfChildren(differ.srcTree) + 1;
 							for(int i = 0; i < gh_num * so_num; i++) {
-								FileUtils.appendStringToFile(size + "," + edits.size() + System.lineSeparator(), corr_csv_file);
+								MyFileUtils.appendStringToFile(size + "," + edits.size() + System.lineSeparator(), corr_csv_file);
 							}
 							
 							// cluster clone groups based on the number of edits
@@ -172,10 +172,10 @@ public class ASTEditAnalysis {
 							
 							// output the edit number to different csv files based on action types
 							for(int i = 0; i < gh_num * so_num; i++) {
-								FileUtils.appendStringToFile(localInsert + System.lineSeparator(), insert_csv_file);
-								FileUtils.appendStringToFile(localDelete + System.lineSeparator(), delete_csv_file);
-								FileUtils.appendStringToFile(localMove + System.lineSeparator(), move_csv_file);
-								FileUtils.appendStringToFile(localUpdate + System.lineSeparator(), update_csv_file);
+								MyFileUtils.appendStringToFile(localInsert + System.lineSeparator(), insert_csv_file);
+								MyFileUtils.appendStringToFile(localDelete + System.lineSeparator(), delete_csv_file);
+								MyFileUtils.appendStringToFile(localMove + System.lineSeparator(), move_csv_file);
+								MyFileUtils.appendStringToFile(localUpdate + System.lineSeparator(), update_csv_file);
 							}
 						} catch (UnsupportedOperationException | IOException e) {
 							e.printStackTrace();

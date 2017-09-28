@@ -14,7 +14,7 @@ import com.github.gumtreediff.gen.Generators;
 import com.github.gumtreediff.tree.ITree;
 import com.github.gumtreediff.tree.TreeContext;
 
-import edu.ucla.cs.utils.FileUtils;
+import edu.ucla.cs.utils.MyFileUtils;
 
 public class CountASTSize {
 	final String csv_file = "/home/troy/research/Integration-Study/log/size_dist.csv";
@@ -62,7 +62,7 @@ public class CountASTSize {
 						
 						// output the number of AST nodes to a csv file
 						for(int i = 0; i < so_num; i++) {
-							FileUtils.appendStringToFile(size + System.lineSeparator(), csv_file);
+							MyFileUtils.appendStringToFile(size + System.lineSeparator(), csv_file);
 						}
 						
 						totalNodes += so_num * size;

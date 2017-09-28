@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import edu.ucla.cs.utils.FileUtils;
+import edu.ucla.cs.utils.MyFileUtils;
 
 public class ClusterSizeEditPair {
 	public static void main(String[] args) throws IOException {
@@ -31,9 +31,9 @@ public class ClusterSizeEditPair {
 			}
 		}
 		
-		FileUtils.appendStringToFile("size, edit, num" + System.lineSeparator(), output);
+		MyFileUtils.appendStringToFile("size, edit, num" + System.lineSeparator(), output);
 		for(ArrayList<Integer> pair : cluster.keySet()) {
-			FileUtils.appendStringToFile(pair.get(0) + "," + pair.get(1) + "," + cluster.get(pair) + System.lineSeparator(), output);
+			MyFileUtils.appendStringToFile(pair.get(0) + "," + pair.get(1) + "," + cluster.get(pair) + System.lineSeparator(), output);
 		}
 	}
 }

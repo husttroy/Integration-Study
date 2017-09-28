@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import edu.ucla.cs.utils.FileUtils;
+import edu.ucla.cs.utils.MyFileUtils;
 
 public class GenerateSizeDistCSV {
 	public static void main(String[] args) throws IOException {
@@ -15,7 +15,7 @@ public class GenerateSizeDistCSV {
 			int size_num = Integer.parseInt(s.split(",")[0]);
 			int edit_freq = Integer.parseInt(s.split(",")[1]);
 			while(edit_freq > 0) {
-				FileUtils.appendStringToFile(size_num + System.lineSeparator(), output);
+				MyFileUtils.appendStringToFile(size_num + System.lineSeparator(), output);
 				edit_freq --;
 			}
 		}
