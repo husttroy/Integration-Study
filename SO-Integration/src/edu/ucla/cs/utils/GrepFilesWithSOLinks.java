@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
-public class RealCloneFinder {
+public class GrepFilesWithSOLinks {
 	public static void main(String[] args) throws IOException {
 		String path = "/home/troy/research/Integration-Study/dataset/clone-codes";
 		String target = "/home/troy/research/Integration-Study/dataset/GH-files-with-so-links";

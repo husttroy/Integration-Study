@@ -14,7 +14,7 @@ public class SOPost {
 	public SOPost(String id, String parentId, String body, String score,
 			String isAccepted, String tags, String viewCount) {
 		this.id = Integer.parseInt(id);
-		this.parentId = Integer.parseInt(id);
+		this.parentId = Integer.parseInt(parentId);
 		this.body = body;
 		this.score = Integer.parseInt(score);
 		this.isAccepted = Integer.parseInt(isAccepted) == 0 ? false : true;
