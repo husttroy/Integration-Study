@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 import com.google.common.io.Files;
 
 import edu.ucla.cs.database.MySQLAccess;
-import edu.ucla.cs.model.SOPost;
+import edu.ucla.cs.model.SOAnswerPost;
 
 public class SOMetaDataAnalysis {
 	public int total;
@@ -91,7 +91,7 @@ public class SOMetaDataAnalysis {
 				int num = Integer.parseInt(post.split(",")[1]);
 				this.total_cloned += num;
 				
-				SOPost p = access.getPost(id);
+				SOAnswerPost p = access.getAnswerPost(id);
 				if(p != null) {
 					if(p.isAccepted) accepted_cloned += num;
 					

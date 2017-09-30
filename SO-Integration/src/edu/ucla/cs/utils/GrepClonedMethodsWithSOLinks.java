@@ -3,16 +3,24 @@ package edu.ucla.cs.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.apache.commons.io.FileUtils;
 
 import edu.ucla.cs.database.MySQLAccess;
-import edu.ucla.cs.model.SOPost;
+import edu.ucla.cs.model.SOAnswerPost;
+import edu.ucla.cs.model.SOQuestionPost;
 
 public class GrepClonedMethodsWithSOLinks {
 	public static void main(String[] args) throws IOException {
 		String rootPath = "/home/troy/research/Integration-Study/dataset/GH-files-with-so-links";
 		String target = "/home/troy/research/Integration-Study/dataset/real-clones";
+		String androidLog = "/home/troy/research/Integration-Study/dataset/missing-android-snippets.log";
+		
+		File logFile = new File(androidLog);
+		if(logFile.exists()) {
+			logFile.delete();
+		}
 		
 		File rootDir = new File(rootPath);
 		MySQLAccess db = new MySQLAccess();
@@ -30,7 +38,7 @@ public class GrepClonedMethodsWithSOLinks {
 			}
 			
 			// get the question id of this answer post
-			SOPost post = db.getPost(postId);
+			SOAnswerPost post = db.getAnswerPost(postId);
 			
 			ArrayList<File> realClones = new ArrayList<File>();
 			for(File file : dir.listFiles()) {
@@ -56,6 +64,33 @@ public class GrepClonedMethodsWithSOLinks {
 									// this is a real clone
 									realClones.add(file);
 									break;
+								} else {
+									HashSet<String> tags;
+									SOQuestionPost qPost = db.getQuestionPost(temp);
+									if(qPost == null) {
+										SOAnswerPost aPost = db.getAnswerPost(temp);
+										if(aPost != null) {
+											tags = aPost.tags;
+										} else {
+											continue;
+										}
+									} else {
+										tags = qPost.tags;
+									}
+									boolean hasJavaTag = false;
+									boolean hasAndroidTag = false;
+									for(String tag : tags) {
+										if(tag.equals("java")) {
+											hasJavaTag = true;
+										} else if (tag.equals("android")) {
+											hasAndroidTag = true;
+										}
+									}
+									
+									if(!hasJavaTag && hasAndroidTag) {
+										// android post
+										MyFileUtils.appendStringToFile(temp, androidLog);
+									}
 								}
 							} else if (s.contains("stackoverflow.com/a")) {
 								// get the answer id
@@ -71,6 +106,24 @@ public class GrepClonedMethodsWithSOLinks {
 								if(temp.equals(postId)) {
 									realClones.add(file);
 									break;
+								} else {
+									SOAnswerPost aPost = db.getAnswerPost(temp);
+									if(aPost != null) {
+										boolean hasJavaTag = false;
+										boolean hasAndroidTag = false;
+										for(String tag : aPost.tags) {
+											if(tag.equals("java")) {
+												hasJavaTag = true;
+											} else if (tag.equals("android")) {
+												hasAndroidTag = true;
+											}
+										}
+										
+										if(!hasJavaTag && hasAndroidTag) {
+											// android post
+											MyFileUtils.appendStringToFile(temp, androidLog);
+										}
+									}
 								}
 							}
 						}

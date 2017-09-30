@@ -9,7 +9,8 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import edu.ucla.cs.model.SOPost;
+import edu.ucla.cs.model.SOAnswerPost;
+import edu.ucla.cs.model.SOQuestionPost;
 import edu.ucla.cs.parse.PartialProgramParser;
 
 public class MySQLAccess {
@@ -32,9 +33,9 @@ public class MySQLAccess {
 		}
 	}
 	
-	public SOPost getPost(String id) {
+	public SOAnswerPost getAnswerPost(String id) {
 		String query = "select * from answers where Id = " + id + ";";
-		SOPost post = null;
+		SOAnswerPost post = null;
 		try {
 			prep = connect.prepareStatement(query);
 			result = prep.executeQuery();
@@ -45,7 +46,28 @@ public class MySQLAccess {
 				String isAccepted = result.getString("IsAccepted");
 				String tags = result.getString("Tags");
 				String viewCount = result.getString("ViewCount");
-				post = new SOPost(id, parentId, body, score, isAccepted, tags, viewCount);
+				post = new SOAnswerPost(id, parentId, body, score, isAccepted, tags, viewCount);
+			}
+			
+			result.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return post;
+	}
+	
+	public SOQuestionPost getQuestionPost(String id) {
+		String query = "select * from questions where Id = " + id + ";";
+		SOQuestionPost post = null;
+		try {
+			prep = connect.prepareStatement(query);
+			result = prep.executeQuery();
+			if (result.next()) {
+				String acceptedId = result.getString("AcceptedAnswerId");
+				String tags = result.getString("Tags");
+				String viewCount = result.getString("ViewCount");
+				post = new SOQuestionPost(id, acceptedId, tags, viewCount);
 			}
 			
 			result.close();

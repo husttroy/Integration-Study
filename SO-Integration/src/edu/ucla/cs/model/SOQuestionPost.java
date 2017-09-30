@@ -2,22 +2,19 @@ package edu.ucla.cs.model;
 
 import java.util.HashSet;
 
-public class SOPost {
+public class SOQuestionPost {
 	public int id;
-	public int parentId;
-	public String body;
-	public int score;
-	public boolean isAccepted;
+	public int acceptedPostId;
 	public HashSet<String> tags;
 	public int viewCount;
 	
-	public SOPost(String id, String parentId, String body, String score,
-			String isAccepted, String tags, String viewCount) {
+	public SOQuestionPost(String id, String acceptedPostId, String tags, String viewCount) {
 		this.id = Integer.parseInt(id);
-		this.parentId = Integer.parseInt(parentId);
-		this.body = body;
-		this.score = Integer.parseInt(score);
-		this.isAccepted = Integer.parseInt(isAccepted) == 0 ? false : true;
+		if(acceptedPostId == null || acceptedPostId.equals("null")) {
+			this.acceptedPostId = -1;
+		} else {
+			this.acceptedPostId = Integer.parseInt(acceptedPostId);
+		}
 		this.tags = new HashSet<String>();
 		if(tags != null) {
 			if(!tags.trim().isEmpty()) {
@@ -41,15 +38,13 @@ public class SOPost {
 	public int hashCode() {
 		int hash = 37;
 		hash += 31 * id;
-//		hash += 31 * parentId;
-//		hash += 31 * viewCount;
 		return hash;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof SOPost) {
-			SOPost other = (SOPost)obj;
+		if(obj instanceof SOQuestionPost) {
+			SOQuestionPost other = (SOQuestionPost)obj;
 			return this.id == other.id;
 		} else {
 			return false;
