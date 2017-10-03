@@ -129,7 +129,7 @@ public class MySQLAccess {
 		return count;
 	}
 	
-	private ArrayList<String> getCode(String body) {
+	public ArrayList<String> getCode(String body) {
 		ArrayList<String> codes = new ArrayList<>();
 		String start = "<code>", end = "</code>";
 		int s = 0;

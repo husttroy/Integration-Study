@@ -17,10 +17,10 @@ public class PartialProgramParser extends JavaParser{
 
 	public ArrayList<String> extracMethod(String code)
 			throws Exception {
-		ArrayList<String> methods = new ArrayList<String>();
+ArrayList<String> methods = new ArrayList<String>();
 		
 		ASTParser parser = getASTParser(code);
-		ASTNode cu = (CompilationUnit) parser.createAST(null);
+		CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 		// System.out.println(cu);
 		cutype = 0;
 		if (((CompilationUnit) cu).types().isEmpty()) {
@@ -30,7 +30,7 @@ public class PartialProgramParser extends JavaParser{
 			String s1 = "public class sample{\n" + code + "\n}";
 			parser = getASTParser(s1);
 			try {
-				cu = parser.createAST(null);
+				cu = (CompilationUnit) parser.createAST(null);
 			} catch(Exception e) {
 				// parse error
 				return new ArrayList<String>();
@@ -46,30 +46,50 @@ public class PartialProgramParser extends JavaParser{
 			
 			if (flag == 1) {
 				// this code snippet has no method header nor class header
-				s1 = "public void foo(){\n" + code
-						+ "\n}";
+				s1 = "public class sample{\n public void foo(){\n" + code
+						+ "\n}\n}";
 				cutype = 2;
 				parser = getASTParser(s1);
 				try {
-					cu = parser.createAST(null);
+					cu = (CompilationUnit) parser.createAST(null);
 				} catch(Exception e) {
 					// parse error
 					return new ArrayList<String>();
 				}
 				
-				if(cu.toString().isEmpty()) {
-					// not parsable
+				if(cu.toString().isEmpty() || cu.getProblems().length > 0) {
+					// parse error
 					return new ArrayList<String>();
 				}
 				
-				methods.add(s1);
+				methods.add("public void foo(){\n" + code + "\n}");
 			} else if (flag == 2) {
 				// this code snippet has at least one method but has no class header
 				// extract methods from the snippet
+				if(cu.getProblems().length > 0) {
+					// parse error
+					return new ArrayList<String>();
+				}
+			
+				final String src = s1;
+				final CompilationUnit cu2 = cu;
 				cu.accept(new ASTVisitor() {
 					@Override
 					public boolean visit(MethodDeclaration node) {
-						methods.add(node.toString());
+						int startLine = cu2.getLineNumber(node
+								.getStartPosition()) - 1;
+						int endLine = cu2.getLineNumber(node.getStartPosition()
+								+ node.getLength()) - 1;
+						String s = "";
+						String[] ss = src.split(System.lineSeparator());
+						for (int i = startLine; i <= endLine; i++) {
+							if(i == endLine) {
+								s += ss[i];
+							} else {
+								s += ss[i] + System.lineSeparator();
+							}
+						}
+						methods.add(s);
 						return false;
 					}
 				});
@@ -79,17 +99,37 @@ public class PartialProgramParser extends JavaParser{
 			cutype = 0;
 			parser = getASTParser(code);
 			try {
-				cu = parser.createAST(null);
+				cu = (CompilationUnit) parser.createAST(null);
 			} catch(Exception e) {
 				// parse error
 				return new ArrayList<String>();
 			}
 			
+			if(cu.getProblems().length > 0) {
+				// parse error
+				return new ArrayList<String>();
+			}
+			
 			// extract methods from the snippet
+			final String src = code;
+			final CompilationUnit cu2 = cu;
 			cu.accept(new ASTVisitor() {
 				@Override
 				public boolean visit(MethodDeclaration node) {
-					methods.add(node.toString());
+					int startLine = cu2.getLineNumber(node
+							.getStartPosition()) - 1;
+					int endLine = cu2.getLineNumber(node.getStartPosition()
+							+ node.getLength()) - 1;
+					String s = "";
+					String[] ss = src.split(System.lineSeparator());
+					for (int i = startLine; i <= endLine; i++) {
+						if(i == endLine) {
+							s += ss[i];
+						} else {
+							s += ss[i] + System.lineSeparator();
+						}
+					}
+					methods.add(s);
 					return false;
 				}
 			});
