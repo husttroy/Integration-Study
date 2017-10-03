@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
-public class PartialProgramParser {
+public class PartialProgramParser extends JavaParser{
 	public int cutype;
 	private int flag = 0;
 
@@ -95,16 +95,5 @@ public class PartialProgramParser {
 			});
 		}
 		return methods;
-	}
-
-	private ASTParser getASTParser(String sourceCode) {
-		ASTParser parser = ASTParser.newParser(AST.JLS8);
-		parser.setStatementsRecovery(true);
-		parser.setKind(ASTParser.K_COMPILATION_UNIT);
-		parser.setSource(sourceCode.toCharArray());
-		Map options = JavaCore.getOptions();
-		JavaCore.setComplianceOptions(JavaCore.VERSION_1_5, options);
-		parser.setCompilerOptions(options);
-		return parser;
 	}
 }
