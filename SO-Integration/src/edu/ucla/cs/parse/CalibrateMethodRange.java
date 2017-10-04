@@ -36,7 +36,7 @@ public class CalibrateMethodRange {
 			if(theClosestRange == null) {
 				theClosestRange = range;
 			} else {
-				if(theClosestRange.x > range.x) {
+				if(theClosestRange.x < range.x) {
 					theClosestRange = range;
 				}
 			}
