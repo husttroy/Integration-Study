@@ -8,8 +8,8 @@ import org.apache.commons.io.FileUtils;
 
 public class GrepFilesWithSOLinks {
 	public static void main(String[] args) throws IOException {
-		String path = "/home/troy/research/Integration-Study/dataset/clone-codes";
-		String target = "/home/troy/research/Integration-Study/dataset/GH-files-with-so-links";
+		String path = "/home/troy/research/Integration-Study/dataset/clone-codes-screened/clone-codes";
+		String target = "/home/troy/research/Integration-Study/dataset/clone-codes-screened/GH-files-with-so-links";
 		
 		File rootDir = new File(path);
 		for(File dir : rootDir.listFiles()) {
@@ -19,7 +19,7 @@ public class GrepFilesWithSOLinks {
 				File soFile = null;
 				for(File file : dir.listFiles()) {
 					String fileName = file.getName();
-					if(!fileName.equals("gh-urls.txt") && fileName.startsWith("gh-")) {
+					if(fileName.startsWith("gh-")) {
 						String code = MyFileUtils.readFileToString(file.getAbsolutePath());
 						if(code.contains("stackoverflow.com")) {
 							filesWithSOLinks.add(file);
@@ -54,6 +54,9 @@ public class GrepFilesWithSOLinks {
 					for(File file : filesWithSOLinks) {
 						FileUtils.copyFileToDirectory(file, destDir);
 					}
+					
+					// also copy the url file, urls.txt
+					FileUtils.copyFileToDirectory(new File(dir.getAbsolutePath() + File.separator + "urls.txt"), destDir);
 				}
 			}
 		}
