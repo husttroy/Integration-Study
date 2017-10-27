@@ -162,9 +162,8 @@ public class GumTreeDiff {
 				if(node.getLabel().isEmpty() && node.getType() == 78) {
 					System.out.println("Insert MarkerAnnotation: " + node.getChild(0).getLabel() + " into " + parent.toPrettyString(dstContext));
 				} else {
-					System.out.println("Insert " + node.toPrettyString(srcContext) + " into " + parent.toPrettyString(srcContext));
+					System.out.println("Insert " + node.toPrettyString(dstContext) + " into " + parent.toPrettyString(srcContext));
 				}
-				
 			} else if (act instanceof Delete) {
 				Delete del = (Delete)act;
 				ITree node = del.getNode();
@@ -185,8 +184,8 @@ public class GumTreeDiff {
 	}
 	
 	public static void main(String[] args) throws UnsupportedOperationException, IOException {	
-		String file1 = "/home/troy/research/Integration-Study/dataset/sample/so-33/so-16090931-0-1.java";
-		String file2 = "/home/troy/research/Integration-Study/dataset/sample/so-33/carved-gh-0-1-46-57.java";
+		String file1 = "/home/troy/research/Integration-Study/dataset/real-clones-reindex/so-69/so-3729157-0-1.java";
+		String file2 = "/home/troy/research/Integration-Study/dataset/real-clones-reindex/so-69/carved-gh-0-1-11-27.java";
 		GumTreeDiff diff = new GumTreeDiff(file1, file2);
 		List<Action> actions = diff.diff();
 		System.out.println(actions.size());
