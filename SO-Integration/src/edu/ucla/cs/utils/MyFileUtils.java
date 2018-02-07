@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MyFileUtils {
 	public static void appendStringToFile(String s, String path) {
@@ -55,5 +56,23 @@ public class MyFileUtils {
 		}
 		
 		return content;
+	}
+	
+	public static ArrayList<String> getCode(String body) {
+		ArrayList<String> codes = new ArrayList<>();
+		String start = "<code>", end = "</code>";
+		int s = 0;
+		while (true) {
+			s = body.indexOf(start, s);
+			if (s == -1)
+				break;
+			s += start.length();
+			int e = body.indexOf(end, s);
+			if (e == -1)
+				break;
+			codes.add(body.substring(s, e).trim());
+			s = e + end.length();
+		}
+		return codes;
 	}
 }

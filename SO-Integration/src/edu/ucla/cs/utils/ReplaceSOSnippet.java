@@ -28,7 +28,7 @@ public class ReplaceSOSnippet {
 			String postId = dirName.split("-")[1];
 			int methodId = Integer.parseInt(dirName.split("-")[2]);
 			SOAnswerPost post = access.getAnswerPost(postId);
-			ArrayList<String> snippets = access.getCode(post.body);
+			ArrayList<String> snippets = MyFileUtils.getCode(post.body);
 			int method_count = -1;
 			for(String snippet: snippets) {
 				snippet = StringEscapeUtils.unescapeHtml4(snippet);

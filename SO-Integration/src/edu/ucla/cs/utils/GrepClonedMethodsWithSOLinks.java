@@ -204,7 +204,7 @@ public class GrepClonedMethodsWithSOLinks {
 				// create a new folder with the same group index in the target directory
 				File destDir = new File(target + File.separator + dirName);
 				if(!destDir.exists()) {
-					destDir.mkdir();
+					destDir.mkdirs();
 				}
 				
 				// copy the stack overflow file
@@ -230,7 +230,7 @@ public class GrepClonedMethodsWithSOLinks {
 						if (url.endsWith(range)) {
 							MyFileUtils.appendStringToFile(
 									url + System.lineSeparator(),
-									dir.getAbsolutePath() + File.separator
+									destDir.getAbsolutePath() + File.separator
 											+ "urls.txt");
 						}
 					}

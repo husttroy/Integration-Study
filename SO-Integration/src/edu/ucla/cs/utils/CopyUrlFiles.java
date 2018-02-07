@@ -17,7 +17,7 @@ public class CopyUrlFiles {
 		for (File dir : destDir.listFiles()) {
 			String dirName = dir.getName();
 			String urlPath = srcPath + File.separator + dirName
-					+ File.separator + "gh-urls.txt";
+					+ File.separator + "urls.txt";
 			List<String> urls = FileUtils.readLines(new File(urlPath),
 					Charset.defaultCharset());
 			for (String fName : dir.list()) {
