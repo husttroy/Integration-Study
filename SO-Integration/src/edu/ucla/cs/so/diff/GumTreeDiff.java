@@ -47,8 +47,15 @@ public class GumTreeDiff {
 		this.dstInsTrees = new HashSet<ITree>();
 	}
 	
-	public List<Action> diff() throws UnsupportedOperationException, IOException {
+	
+	/**
+	 * Must call this first before calling diff
+	 */
+	public static void init() {
 		Run.initGenerators();
+	}
+	
+	public List<Action> diff() throws UnsupportedOperationException, IOException {
 		srcContext = Generators.getInstance().getTree(src);
 		dstContext = Generators.getInstance().getTree(dst);
 		srcTree = srcContext.getRoot();
@@ -184,8 +191,9 @@ public class GumTreeDiff {
 	}
 	
 	public static void main(String[] args) throws UnsupportedOperationException, IOException {	
-		String file1 = "/home/troy/research/Integration-Study/dataset/real-clones-reindex/so-69/so-3729157-0-1.java";
-		String file2 = "/home/troy/research/Integration-Study/dataset/real-clones-reindex/so-69/carved-gh-0-1-11-27.java";
+		String file1 = "/home/troy/research/Integration-Study/dataset/all-clones-reindex/so-4392/so-30441841-0-1.java";
+		String file2 = "/home/troy/research/Integration-Study/dataset/all-clones-reindex/so-4392/carved-gh-7-1-20-42.java";
+		GumTreeDiff.init();
 		GumTreeDiff diff = new GumTreeDiff(file1, file2);
 		List<Action> actions = diff.diff();
 		System.out.println(actions.size());

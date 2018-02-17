@@ -187,6 +187,7 @@ public class ASTEditAnalysis {
 	}
 	
 	public static void main(String[] args) {
+		GumTreeDiff.init();
 		ASTEditAnalysis counter = new ASTEditAnalysis("/home/troy/research/Integration-Study/dataset/clone-groups");
 		counter.process();
 		double ave_edits = counter.totalEdits / (double) counter.clonePairs;
