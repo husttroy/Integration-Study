@@ -53,6 +53,10 @@ public class SOProcess {
 					String viewCount = result.getString("ViewCount");
 					String tags = result.getString("tags");
 					
+//					if(!id.equals("19943894")) {
+//						continue;
+//					}
+					
 					// get the snippet
 					String body = result.getString("Body");
 					ArrayList<String> snippets = getCode(body);
@@ -63,7 +67,7 @@ public class SOProcess {
 						if(len > 1) {
 							PartialProgramParser parser = new PartialProgramParser();
 							try {
-								ArrayList<String> methods = parser.extracMethod(snippet);
+								ArrayList<String> methods = parser.extractMethod(snippet);
 								// print methods to the output file
 								for(String method : methods) {
 									method_count ++;

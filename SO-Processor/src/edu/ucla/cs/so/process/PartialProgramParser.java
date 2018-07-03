@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -15,7 +16,7 @@ public class PartialProgramParser {
 	public int cutype;
 	private int flag = 0;
 
-	public ArrayList<String> extracMethod(String code)
+	public ArrayList<String> extractMethod(String code)
 			throws Exception {
 		ArrayList<String> methods = new ArrayList<String>();
 		
@@ -57,8 +58,8 @@ public class PartialProgramParser {
 					return new ArrayList<String>();
 				}
 				
+				// If there is any syntax error in a method body, GumTree will not be able to generate the AST node of the method 
 				if(cu.toString().isEmpty() || cu.getProblems().length > 0) {
-					// parse error
 					return new ArrayList<String>();
 				}
 				
@@ -66,33 +67,16 @@ public class PartialProgramParser {
 			} else if (flag == 2) {
 				// this code snippet has at least one method but has no class header
 				// extract methods from the snippet
-				if(cu.getProblems().length > 0) {
-					// parse error
+				
+				// tolerate SO snippets with some syntax errors 
+				if(cu.getProblems().length > 10) {
+					// if there are more than 10 syntax errors, this is unlikely to be a valid Java snippet
 					return new ArrayList<String>();
 				}
 			
-				final String src = s1;
-				final CompilationUnit cu2 = cu;
-				cu.accept(new ASTVisitor() {
-					@Override
-					public boolean visit(MethodDeclaration node) {
-						int startLine = cu2.getLineNumber(node
-								.getStartPosition()) - 1;
-						int endLine = cu2.getLineNumber(node.getStartPosition()
-								+ node.getLength()) - 1;
-						String s = "";
-						String[] ss = src.split(System.lineSeparator());
-						for (int i = startLine; i <= endLine; i++) {
-							if(i == endLine) {
-								s += ss[i];
-							} else {
-								s += ss[i] + System.lineSeparator();
-							}
-						}
-						methods.add(s);
-						return false;
-					}
-				});
+				JavaMethodExtractor extractor = new JavaMethodExtractor(s1, cu);
+				cu.accept(extractor);
+				methods.addAll(extractor.methods);
 			}
 		} else {
 			// this code snippet has both class header and method header
@@ -105,34 +89,16 @@ public class PartialProgramParser {
 				return new ArrayList<String>();
 			}
 			
-			if(cu.getProblems().length > 0) {
-				// parse error
+			// [July 3] decide to tolerate SO snippets with some syntax errors if not many (use 10 as the threshold
+			if(cu.getProblems().length > 10) {
+				// if there are more than 10 syntax errors, this is unlikely to be a valid Java snippet
 				return new ArrayList<String>();
 			}
 			
 			// extract methods from the snippet
-			final String src = code;
-			final CompilationUnit cu2 = cu;
-			cu.accept(new ASTVisitor() {
-				@Override
-				public boolean visit(MethodDeclaration node) {
-					int startLine = cu2.getLineNumber(node
-							.getStartPosition()) - 1;
-					int endLine = cu2.getLineNumber(node.getStartPosition()
-							+ node.getLength()) - 1;
-					String s = "";
-					String[] ss = src.split(System.lineSeparator());
-					for (int i = startLine; i <= endLine; i++) {
-						if(i == endLine) {
-							s += ss[i];
-						} else {
-							s += ss[i] + System.lineSeparator();
-						}
-					}
-					methods.add(s);
-					return false;
-				}
-			});
+			JavaMethodExtractor extractor = new JavaMethodExtractor(code, cu);
+			cu.accept(extractor);
+			methods.addAll(extractor.methods);
 		}
 		return methods;
 	}
