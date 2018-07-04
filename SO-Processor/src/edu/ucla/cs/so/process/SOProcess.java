@@ -71,13 +71,18 @@ public class SOProcess {
 								// print methods to the output file
 								for(String method : methods) {
 									method_count ++;
-									int len2 = method.split(System.lineSeparator()).length; 
-//									if(len2 >= 10 || len2 < 4) {
-										// only consider methods with less than 10 lines of code
-									if(len2 < 10) {
-										// only consider methods with more than 10 lines of code
+									int len2 = method.split(System.lineSeparator()).length;
+									// Filter 1: remove those with less than 5 lines of code 
+									if(len2 < 5) {
 										continue;
 									}
+									
+									// Filter 2: remove those with less than 50 tokens, not including comments
+									int tokenCount = SourceCodeTokenizer.CountTokens(method);
+									if(tokenCount < 50) {
+										continue;
+									}
+									
 									String s = "===UCLA@@@UCI===" + System.lineSeparator();
 									s += "PostId: " + id + System.lineSeparator();
 									s += "Score: " + score + System.lineSeparator();
