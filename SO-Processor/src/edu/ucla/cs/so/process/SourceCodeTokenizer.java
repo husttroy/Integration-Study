@@ -12,10 +12,9 @@ public class SourceCodeTokenizer {
 			codeWithOutComments = codeWithOutComments.replaceAll(Pattern.quote(separator), " ");
 		}
 		
-		// SourcererCC tokenizer does not remove whitespaces so we will also keep them here
-//		codeWithOutComments = codeWithOutComments.replaceAll("\n", "");
-//		codeWithOutComments = codeWithOutComments.replaceAll("\t", "");
-//		codeWithOutComments = codeWithOutComments.replaceAll("\r", "");
+		codeWithOutComments = codeWithOutComments.replaceAll("\n", "");
+		codeWithOutComments = codeWithOutComments.replaceAll("\t", "");
+		codeWithOutComments = codeWithOutComments.replaceAll("\r", "");
 		
 		String[] tokens = codeWithOutComments.split(" ");
 		ArrayList<String> ts = new ArrayList<String>();

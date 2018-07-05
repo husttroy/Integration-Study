@@ -140,7 +140,7 @@ public class SOProcess {
 	public static void main(String[] args) {
 		SOProcess p = new SOProcess();
 		p.connect();
-		p.processAll("./so-more-than-10-lines.txt");
+		p.processAll("./so-more-than-50-tokens.txt");
 //		p.processAll("./so-less-than-10-lines.txt");
 		p.close();
 	}
