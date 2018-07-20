@@ -15,13 +15,15 @@ import edu.ucla.cs.so.diff.GumTreeDiff;
 public class PrepareClonesInCSV {
 	public static void main(String[] args)
 			throws UnsupportedOperationException, IOException {
-		String path = "/home/troy/research/Integration-Study/dataset/clone-codes-screened/real-clones-reindex";
-		String csvPath = "/home/troy/research/Integration-Study/log/real-clones2.csv";
+		String path = "/home/troy/research/Integration-Study/dataset/new-gh-with-so-links";
+		String csvPath = "/home/troy/ExampleStack/study/log/new-real-clone-sample.csv";
 		
 		File csvFile = new File(csvPath);
 		if(csvFile.exists()) {
 			csvFile.delete();
 		}
+		
+		GumTreeDiff.init();
 
 		File rootDir = new File(path);
 		for (File dir : rootDir.listFiles()) {
@@ -46,19 +48,12 @@ public class PrepareClonesInCSV {
 				String link = "https://stackoverflow.com/questions/" + postId;
 				for (File ghFile : carvedGHFiles) {
 					String ghFileName = ghFile.getName();
-					String ghFileNameNoExt = ghFileName.substring(0,
-							ghFileName.indexOf("."));
-					String startLineS = ghFileNameNoExt.split("-")[4];
-					String endLineS = ghFileNameNoExt.split("-")[5];
-					String range = "#L" + startLineS + "-L" + endLineS;
+					int ghIndex = Integer.parseInt(ghFileName.split("-")[2]);
 					List<String> urls = FileUtils.readLines(urlFile,
 							Charset.defaultCharset());
-					String url = null;
-					for (String s : urls) {
-						if (s.endsWith(range)) {
-							url = s.substring(s.indexOf("https"));
-						}
-					}
+					String url =  urls.get(ghIndex);
+					url = url.split("\t")[1];
+					url = "https://github.com/" + url;
 					GumTreeDiff differ = new GumTreeDiff(
 							soFile.getAbsolutePath(), ghFile.getAbsolutePath());
 					List<Action> edits = differ.diff();
