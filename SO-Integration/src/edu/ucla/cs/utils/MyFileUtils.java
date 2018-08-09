@@ -7,7 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 public class MyFileUtils {
 	public static void appendStringToFile(String s, String path) {
@@ -74,5 +79,39 @@ public class MyFileUtils {
 			s = e + end.length();
 		}
 		return codes;
+	}
+	
+	public static HashMap<Integer, String> getCloneURL(File file) {
+		HashMap<Integer, String> urls = new HashMap<Integer, String>();
+		try {
+			List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
+			for(String line : lines) {
+				if(line.isEmpty()) continue;
+				String[] ss = line.split("\t");
+				int index = Integer.parseInt(ss[0]);
+				String url  = ss[1];
+				urls.put(index, url);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return urls;
+	}
+
+	public static HashMap<Integer, String> getCloneTimestamp(File file) {
+		HashMap<Integer, String> timestamps = new HashMap<Integer, String>();
+		try {
+			List<String> lines = FileUtils.readLines(file, Charset.defaultCharset());
+			for(String line : lines) {
+				if(line.isEmpty()) continue;
+				String[] ss = line.split("\t");
+				int index = Integer.parseInt(ss[0]);
+				String url  = ss[2];
+				timestamps.put(index, url);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return timestamps;
 	}
 }
