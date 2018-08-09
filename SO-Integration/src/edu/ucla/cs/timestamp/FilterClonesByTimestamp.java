@@ -73,6 +73,10 @@ public class FilterClonesByTimestamp {
 						File file2 = new File(outputPath + File.separator + "so-" + groupId + File.separator + name);
 						FileUtils.copyFile(file, file2);
 					}
+				} else if (name.startsWith("so-")) {
+					// copy the so snippet to the target dir
+					File file2 = new File(outputPath + File.separator + "so-" + groupId + File.separator + name);
+					FileUtils.copyFile(file, file2);
 				}
 			}
 		}
