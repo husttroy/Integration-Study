@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import edu.ucla.cs.model.SOAnswerPost;
 import edu.ucla.cs.model.SOQuestionPost;
 import edu.ucla.cs.parse.PartialProgramParser;
+import edu.ucla.cs.utils.MyFileUtils;
 
 public class MySQLAccess {
 	final String url = "jdbc:mysql://localhost:3306/stackoverflow";
@@ -57,6 +58,49 @@ public class MySQLAccess {
 		return post;
 	}
 	
+	public String getTimeStampOfAnswerPost(String id) {
+		String query = "select CreationDate from answers where Id = " + id + ";";
+		try {
+			prep = connect.prepareStatement(query);
+			result = prep.executeQuery();
+			if (result.next()) {
+				String date = result.getString("CreationDate");
+				return date;
+			}
+			
+			result.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public ArrayList<SOAnswerPost> getAnswerPostsByQuestionId(String id) {
+		String query = "select * from answers where ParentId = " + id + ";";
+		ArrayList<SOAnswerPost> posts = new ArrayList<SOAnswerPost>();
+		try {
+			prep = connect.prepareStatement(query);
+			result = prep.executeQuery();
+			while (result.next()) {
+				String answerId = result.getString("id");
+				String parentId = result.getString("ParentId");
+				String body = result.getString("Body");
+				String score = result.getString("Score");
+				String isAccepted = result.getString("IsAccepted");
+				String tags = result.getString("Tags");
+				String viewCount = result.getString("ViewCount");
+				posts.add(new SOAnswerPost(answerId, parentId, body, score, isAccepted, tags, viewCount));
+			}
+			
+			result.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return posts;
+	}
+	
 	public SOQuestionPost getQuestionPost(String id) {
 		String query = "select * from questions where Id = " + id + ";";
 		SOQuestionPost post = null;
@@ -88,7 +132,7 @@ public class MySQLAccess {
 				while(result.next()) {
 					// get the snippet
 					String body = result.getString("Body");
-					ArrayList<String> snippets = getCode(body);
+					ArrayList<String> snippets = MyFileUtils.getCode(body);
 					for(String snippet: snippets) {
 						snippet = StringEscapeUtils.unescapeHtml4(snippet);
 						int len = snippet.split(System.lineSeparator()).length;
@@ -127,24 +171,6 @@ public class MySQLAccess {
 		}
 		
 		return count;
-	}
-	
-	public ArrayList<String> getCode(String body) {
-		ArrayList<String> codes = new ArrayList<>();
-		String start = "<code>", end = "</code>";
-		int s = 0;
-		while (true) {
-			s = body.indexOf(start, s);
-			if (s == -1)
-				break;
-			s += start.length();
-			int e = body.indexOf(end, s);
-			if (e == -1)
-				break;
-			codes.add(body.substring(s, e).trim());
-			s = e + end.length();
-		}
-		return codes;
 	}
 	
 	public void close() {
